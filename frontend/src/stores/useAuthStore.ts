@@ -12,6 +12,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: null, user: null, loading: false })
   },
 
+  setAccessToken: (accessToken) => {
+    set({ accessToken })
+  },
+
   signUp: async (userName, password, email, firstName, lastName) => {
     try {
       set({ loading: true })
@@ -32,13 +36,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true })
       const { accessToken } = await authService.signIn(userName, password)
-
       // lưu accessToken vào store
-      set({ accessToken })
+      get().setAccessToken(accessToken)
+
+      // lấy thông tin người dùng và lưu vào store
+      await get().fetchMe()
       toast.success('Chào mừng bạn đã trở lại với Moji.')
     } catch (error) {
       console.error(error)
       toast.error('Đăng nhập không thành công.')
+    } finally {
+      set({ loading: false })
     }
   },
 
@@ -61,8 +69,28 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ user })
     } catch (error) {
       console.error('Lỗi khi gọi fetchMe ở useAuthStore: ', error)
+      set({ user: null, accessToken: null })
+      toast.error('Lỗi xảy ra khi lấy dữ liệu người dùng.')
     } finally {
+      set({ loading: false })
+    }
+  },
+
+  refresh: async () => {
+    try {
       set({ loading: true })
+      const { user, fetchMe, setAccessToken } = get()
+      const accessToken = await authService.refresh()
+      setAccessToken(accessToken)
+      if (!user) {
+        await fetchMe()
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Phiên đăng nhập hết hạn vui lòng đăng nhập lại.')
+      get().clearState()
+    } finally {
+      set({ loading: false })
     }
   },
 }))

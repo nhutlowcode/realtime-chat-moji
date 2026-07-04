@@ -47,10 +47,15 @@ export const authService = {
 
   fetchMe: async () => {
     try {
-      const res = await api.get('/user/me', { withCredentials: true })
+      const res = await api.get('/users/me', { withCredentials: true })
       return res.data.user
     } catch (error) {
       console.error('Lỗi khi gọi fetchMe: ', error)
     }
+  },
+
+  refresh: async () => {
+    const res = await api.post('/auth/refresh')
+    return res.data.accessToken
   },
 }
