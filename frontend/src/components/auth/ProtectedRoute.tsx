@@ -1,0 +1,13 @@
+import { useAuthStore } from '@/stores/useAuthStore'
+import { Navigate, Outlet } from 'react-router'
+
+function ProtectedRoute() {
+  const { accessToken, user, password } = useAuthStore()
+
+  if (!accessToken) {
+    return <Navigate to="/signin" replace />
+  }
+  return <Outlet />
+}
+
+export default ProtectedRoute
