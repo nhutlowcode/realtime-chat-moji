@@ -4,7 +4,7 @@ import FriendRequest from '../models/FriendRequest.js'
 
 export const sendFriendRequest = async (req, res) => {
   try {
-    // lấy người nhận và message từ FE
+    // lấy người nhận và lời nhắn từ FE
     const { to, message } = req.body
     // lấy id của người gửi
     const from = req.user._id

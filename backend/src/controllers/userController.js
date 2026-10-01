@@ -13,14 +13,16 @@ export const authMe = async (req, res) => {
 export const searchUserByusername = async (req, res) => {
   try {
     const { username } = req.query
-    if (!username || !username.trim()) {
+    if (!username || username.trim() === '') {
       return res.status(400).json({ message: 'Vui lòng nhập username hợp lệ' })
     }
     const user = await User.findOne({ username }).select(
+      // select những thông tin cần thiết để trả về
       '_id displayName username avartarUrl',
     )
     return res.status(200).json({ user })
   } catch (error) {
     console.error('Lỗi xảy ra ở searchUserByusername', error)
+    return res.status(500).json({ message: 'Lỗi hệ thống' })
   }
 }

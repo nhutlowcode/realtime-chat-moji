@@ -1,9 +1,9 @@
 import express from 'express'
-import { authMe } from '../controllers/userController.js'
-import { protectedRoute } from '../middlewares/authMiddeware.js'
+import { authMe, searchUserByusername } from '../controllers/userController.js'
 
 const router = express.Router()
 
 router.get('/me', authMe)
+router.get('/search', searchUserByusername)
 
 export default router

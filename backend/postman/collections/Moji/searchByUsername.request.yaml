@@ -1,0 +1,11 @@
+$kind: http-request
+description: ""
+url: http://localhost:5001/api/search?username=user4
+method: GET
+queryParams:
+  username: user4
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0990}}"
+order: 2400433063919693

@@ -156,7 +156,9 @@ export const useChatStore = create<ChatState>()(
       updateConversation: (conversation) => {
         set((state) => ({
           conversations: state.conversations.map((c) =>
-            c._id === conversation._id ? { ...c, ...conversation } : c,
+            c._id === (conversation as typeof c)._id
+              ? { ...c, ...(conversation as Partial<typeof c>) }
+              : c,
           ),
         }))
       },
