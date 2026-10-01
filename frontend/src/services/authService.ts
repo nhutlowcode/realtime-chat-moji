@@ -1,17 +1,18 @@
 import api from '@/lib/axios'
+import axios from 'axios'
 
 export const authService = {
   signUp: async (
-    userName: string,
+    username: string,
     password: string,
     email: string,
     firstName: string,
     lastName: string,
   ) => {
-    const res = await api.post(
+    const res = await axios.post(
       '/auth/signup',
       {
-        userName,
+        username,
         password,
         email,
         firstName,
@@ -22,12 +23,15 @@ export const authService = {
     return res.data
   },
 
-  signIn: async (userName: string, password: string) => {
+  signIn: async (username: string, password: string) => {
     try {
-      const res = await api.post(
-        '/auth/signin',
+      console.log(
+        `ở authservice username: ${username} và password: ${password}`,
+      )
+      const res = await axios.post(
+        'http://localhost:5001/api/auth/signin',
         {
-          userName,
+          username,
           password,
         },
         {
@@ -47,7 +51,7 @@ export const authService = {
 
   fetchMe: async () => {
     try {
-      const res = await api.get('/users/me', { withCredentials: true })
+      const res = await api.get('/users/me')
       return res.data.user
     } catch (error) {
       console.error('Lỗi khi gọi fetchMe: ', error)

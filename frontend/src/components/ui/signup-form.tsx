@@ -24,21 +24,18 @@ export function SignupForm({
 }: React.ComponentProps<'div'>) {
   const { signUp } = useAuthStore()
   const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<signUpFormValues>({
-    resolver: zodResolver(signUpShema),
-  })
+  } = useForm<signUpFormValues>({ resolver: zodResolver(signUpShema) })
 
   const onsubmit = async (data: signUpFormValues) => {
     // trích dữ liệu từ tham số 'data'
     const { username, password, email, firstname, lastname } = data
-
     // gọi api
     await signUp(username, password, email, firstname, lastname)
-
     navigate('/signin')
   }
 
@@ -93,7 +90,7 @@ export function SignupForm({
                 </div>
               </div>
 
-              {/* userName */}
+              {/* username */}
               <div className="flex flex-col gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="username" className="block text-sm">

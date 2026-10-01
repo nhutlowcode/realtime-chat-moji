@@ -2,16 +2,14 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL:
-    import.meta.env.MODE === 'development'
-      ? 'http://localhost:5001/api'
-      : '/api',
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true, // phải có này để cookie có thể gửi lên server
 })
 
+// trước khi gửi request thì sẽ chạy đoạnn này
 // gắn access token vào req header
 api.interceptors.request.use((config) => {
-  // cú pháp này chỉ lấy accesstoken tại thời điểm code này chạy, sau đó accesstoken có cập nhật thì giá trị của accesstoken hiện tại vẫn giữ nguyên
+  // cú pháp này sẽ lấy state mới nhất tại thời điểm request được gửi, nên nếu accessToken đã được cập nhật sau refresh thì request sau sẽ dùng token mới.
   const { accessToken } = useAuthStore.getState()
 
   if (accessToken) {
@@ -21,7 +19,7 @@ api.interceptors.request.use((config) => {
 })
 
 api.interceptors.response.use(
-  (res) => res,
+  (res) => res, // nếu request thành công thì trả về res
   async (error) => {
     const originalRequest = error.config
 
@@ -42,7 +40,7 @@ api.interceptors.response.use(
         const newAccessToken = res.data.accessToken
         useAuthStore.getState().setAccessToken(newAccessToken)
 
-        // gắn accesstoken mới vào header của request cữ
+        // gắn accesstoken mới vào header của request cũ
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
 
         return api(originalRequest)

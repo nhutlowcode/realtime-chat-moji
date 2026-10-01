@@ -5,12 +5,15 @@ import cookieParser from 'cookie-parser'
 import { connectDB } from './libs/db.js'
 import authRoute from './routes/authRoute.js'
 import userRoute from './routes/userRoute.js'
+import friendRoute from './routes/friendRoute.js'
+import MessageRoute from '../src/routes/messageRoute.js'
+import ConversationRoute from '../src/routes/conversationRoute.js'
 import { protectedRoute } from './middlewares/authMiddeware.js'
+import { app, server } from './/socket/index.js'
 
 dotenv.config()
 
 // Khởi tạo server
-const app = express()
 const PORT = process.env.PORT || 5001
 
 // middleware
@@ -29,9 +32,14 @@ app.use('/api/auth', authRoute)
 // private routes
 app.use(protectedRoute) // có thể sử dụng middleware ở server thay vì gán vào từng cái route
 app.use('/api/users', userRoute)
+app.use('/api/friends', friendRoute)
+app.use('/api/messages', MessageRoute)
+app.use('/api/conversations', ConversationRoute)
 
+ConversationRoute
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  // server này đã được cấu hình socket.io
+  server.listen(PORT, () => {
     {
       console.log(`Server đang chạy ở cổng ${PORT}`)
     }

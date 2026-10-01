@@ -4,6 +4,7 @@ import { Navigate, Outlet } from 'react-router'
 
 function ProtectedRoute() {
   const { accessToken, user, loading, refresh, fetchMe } = useAuthStore()
+
   const [starting, setStarting] = useState(true)
 
   const init = async () => {

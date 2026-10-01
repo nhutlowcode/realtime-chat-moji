@@ -1,6 +1,7 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router'
+import { LogOut } from 'lucide-react'
 
 function Logout() {
   const { signOut } = useAuthStore()
@@ -13,7 +14,12 @@ function Logout() {
       console.log('Lỗi khi đăng xuất: ', error)
     }
   }
-  return <Button onClick={handleLogOut}>Logout</Button>
+  return (
+    <Button variant="completeGhost" onClick={handleLogOut}>
+      <LogOut className="text-destructive" />
+      Đăng xuất
+    </Button>
+  )
 }
 
 export default Logout

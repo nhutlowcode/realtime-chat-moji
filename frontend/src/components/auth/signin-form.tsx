@@ -33,7 +33,6 @@ export function SigninForm({
   const onsubmit = async (data: signInFormValues) => {
     const { username, password } = data
     await signIn(username, password)
-
     navigate('/')
   }
 
@@ -54,7 +53,7 @@ export function SigninForm({
                 </p>
               </div>
 
-              {/* userName */}
+              {/* username */}
               <div className="flex flex-col gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="username" className="block text-sm">
