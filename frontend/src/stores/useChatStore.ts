@@ -3,6 +3,7 @@ import type { ChatState } from '@/types/store'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuthStore } from './useAuthStore'
+import { useSocketStore } from './useSocketStore'
 
 export const useChatStore = create<ChatState>()(
   persist(
@@ -12,6 +13,8 @@ export const useChatStore = create<ChatState>()(
       activeConversationId: null, // với state này chỉ nắm giữ duy nhất 1 Id cuộc trò chuyện
       convoloading: false,
       messageloading: false,
+
+      loading: false,
       // hàm setActiveConversation dùng để set cuộc trò chuyện được chọn thông qua id của cuộc trò chuyện được truyền vào
       setActiveConversation: (id) => set({ activeConversationId: id }),
       // hàm reset dùng để đặt các state trở về ban đầu
@@ -195,6 +198,45 @@ export const useChatStore = create<ChatState>()(
           }))
         } catch (error) {
           console.error('Lỗi xảy ra ở mark as seen trong store', error)
+        }
+      },
+
+      addConvo: (convo) => {
+        set((state) => {
+          const exists = state.conversations.some(
+            (c) => c._id.toString() === convo._id.toString(),
+          )
+          return {
+            conversations: exists
+              ? state.conversations
+              : [convo, ...state.conversations],
+            activeConversationId: convo._id,
+          }
+        })
+      },
+
+      createConversation: async (type, name, memberIds) => {
+        {
+          try {
+            set({ loading: true })
+            const conversation = await chatService.createConversation(
+              type,
+              name,
+              memberIds,
+            )
+
+            get().addConvo(conversation)
+            useSocketStore
+              .getState()
+              .socket?.emit('join-conversation', conversation._id)
+          } catch (error) {
+            console.error(
+              'Lỗi xảy ra khi gọi createConversation trong store',
+              error,
+            )
+          } finally {
+            set({ loading: false })
+          }
         }
       },
     }),

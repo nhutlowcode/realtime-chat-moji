@@ -11,7 +11,7 @@ export const createConversation = async (req, res) => {
     // console.log('memberIds: ', memberIds)
 
     if (
-      (type !== 'group' && !name) ||
+      (type === 'group' && !name) ||
       !memberIds ||
       !Array.isArray(memberIds) ||
       memberIds.length === 0
@@ -63,7 +63,23 @@ export const createConversation = async (req, res) => {
       { path: 'seenBy', select: 'displayName avatarUrl' },
       { path: 'lastMessage.senderId', select: 'displayName avatarUrl' },
     ])
-    return res.status(201).json({ conversation })
+    const participants = (conversation.participants || []).map((p) => ({
+      _id: p.userId._id,
+      displayName: p.userId?.displayName,
+      avatarUrl: p.userId?.avatarUrl ?? null,
+      joinedAt: p.joinedAt,
+    }))
+
+    const formatted = { ...conversation.toObject(), participants }
+
+    if (type === 'group') {
+      memberIds.forEach((userId) => {
+        // io phải là cùng một instance Socket.IO server
+        io.to(userId.toString()).emit('new-group', formatted)
+      })
+    }
+
+    return res.status(201).json({ conversation: formatted })
   } catch (error) {
     console.error('Lỗi khi tạo conversation', error)
     res.status(500).json({ message: 'Lỗi hệ thống' })

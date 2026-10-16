@@ -24,6 +24,9 @@ export const useAuthStore = create<AuthState>()(
       setAccessToken: (accessToken) => {
         set({ accessToken })
       },
+      setUser: (user) => {
+        set({ user })
+      },
 
       signUp: async (username, password, email, firstName, lastName) => {
         try {

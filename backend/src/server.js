@@ -10,6 +10,7 @@ import MessageRoute from '../src/routes/messageRoute.js'
 import ConversationRoute from '../src/routes/conversationRoute.js'
 import { protectedRoute } from './middlewares/authMiddeware.js'
 import { app, server } from './/socket/index.js'
+import { v2 as cloudinary } from 'cloudinary'
 
 dotenv.config()
 
@@ -25,6 +26,13 @@ app.use(
 )
 app.use(express.json())
 app.use(cookieParser()) // phải có thư viện này để có thể đọc cookie từ req
+
+// Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET, // Click 'View API Keys' above to copy your API secret
+})
 
 // public routes
 app.use('/api/auth', authRoute)

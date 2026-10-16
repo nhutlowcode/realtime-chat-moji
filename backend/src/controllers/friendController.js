@@ -6,6 +6,9 @@ export const sendFriendRequest = async (req, res) => {
   try {
     // lấy người nhận và lời nhắn từ FE
     const { to, message } = req.body
+
+    console.log('to in BE sendFriendRequest: ', to)
+    console.log('message in BE sendFriendRequest: ', message)
     // lấy id của người gửi
     const from = req.user._id
     // kiểm tra có phải gửi cho chính mình hay không
@@ -161,10 +164,10 @@ export const getAllFriends = async (req, res) => {
 
       // Thay ObjectId của userA bằng document User thật
       // Chỉ lấy các field cần thiết
-      .populate('userA', '_id displayName avatarUrl')
+      .populate('userA', '_id displayName avatarUrl username')
 
       // Làm tương tự với userB
-      .populate('userB', '_id displayName avatarUrl')
+      .populate('userB', '_id displayName avatarUrl username')
 
       // Chuyển document Mongoose thành object JavaScript thuần
       // để truy cập nhanh hơn và giảm overhead
@@ -201,7 +204,7 @@ export const getAllFriends = async (req, res) => {
 export const getFriendRequests = async (req, res) => {
   try {
     const userId = req.user._id
-    const populateFields = ' _id displayName avatarUrl'
+    const populateFields = '_id username displayName avatarUrl'
     const [sent, received] = await Promise.all([
       FriendRequest.find({ from: userId }).populate('to', populateFields), // poluplate là thêm nhưng field thông tin của bảng mà field đang truy vấn reference đến, ở đây là field 'to' ref đến bảng User được định nghĩa trong schema
       FriendRequest.find({ to: userId }).populate('from', populateFields),

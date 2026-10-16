@@ -53,7 +53,7 @@ const SearchForm = ({
         )}
       </div>
 
-      <DialogFooter>
+      <DialogFooter className="border-none">
         <DialogClose asChild>
           <Button
             type="button"

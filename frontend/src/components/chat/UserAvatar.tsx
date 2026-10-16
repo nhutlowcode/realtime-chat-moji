@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 interface IUserAvatarProps {
   type: 'sidebar' | 'chat' | 'profile'
@@ -10,9 +10,11 @@ interface IUserAvatarProps {
 
 const UserAvatar = ({ type, name, avatarUrl, className }: IUserAvatarProps) => {
   const bgColor = !avatarUrl ? 'bg-blue-500' : ''
+
   if (!name) {
     name = 'Moji'
   }
+
   return (
     <Avatar
       className={cn(

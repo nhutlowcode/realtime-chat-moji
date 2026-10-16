@@ -22,8 +22,8 @@ const SendRequestForm = ({
   onBack,
 }: SendRequestProps) => {
   return (
-    <form onSubmit={onSubmit}>
-      <div>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div className="space-y-2">
         <span className="success-message">
           Tìm thấy<span className="font-semibold">@{searchedUsername}</span> rồi
           nè 🎉
@@ -42,7 +42,7 @@ const SendRequestForm = ({
           />
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="border-none">
           <Button
             type="button"
             variant="outline"

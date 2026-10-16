@@ -4,8 +4,8 @@ import { UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import SearchForm from '../AddFriendModal/SearchForm'
-import SendRequestForm from '../AddFriendModal/SendRequestForm'
+import SearchForm from '../addFriendModal/SearchForm'
+import SendRequestForm from '../addFriendModal/SendRequestForm'
 import {
   Dialog,
   DialogContent,

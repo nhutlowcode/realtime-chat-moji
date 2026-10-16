@@ -32,6 +32,14 @@ io.on('connection', async (socket) => {
     socket.join(id)
   })
 
+  socket.on('join-conversation', (conversationId) => {
+    socket.join(conversationId)
+  })
+
+  // Cho kết nối socket hiện tại tham gia vào một “phòng” (room) có tên là ID của người dùng
+  // chuyển ObjectId thành chuỗi, vì tên room phải là string
+  socket.join(user._id.toString())
+
   socket.on('disconnect', () => {
     onlineUsers.delete(user._id) // xóa user nào ngắt kết nối socket
     io.emit('online-users', Array.from(onlineUsers.keys())) // gửi thông báo đến FE danh sách users onl mới nhất
